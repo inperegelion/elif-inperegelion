@@ -1,4 +1,4 @@
-const homeUrl = "http://localhost:8085/";
+const homeUrl = "/";
 let a;
 let lolo;
 
@@ -58,8 +58,7 @@ $(() => {
 			.map((i, elem) => {
 				let temp = '';
 				$(elem).on('click', (event) => {
-					console.log(event.currentTarget);
-					
+					console.info(event.currentTarget);
 					temp = `<input type='text' value='${event.currentTarget.text}'></input><button >✓<button>`;
 					event.currentTarget.after(temp)
 				})

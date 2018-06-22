@@ -17,7 +17,7 @@ function send404(response, request) {
 		"Content-Type": "text/plain"
 	});
 	response.write("Error 404: Resource not found.");
-	console.log(
+	console.info(
 		`${new Date().getHours()}:${new Date().getMinutes()}  just sent err404 on ${
       request.url
     }`
@@ -67,10 +67,11 @@ function queryGenerator(mode, arr = new Object()) {
 }
 
 var connectionToDB = mysql.createConnection({
-	host: "localhost",
-	user: "root",
-	password: "serhii",
-	database: "eliftech"
+	host: process.env.DB_HOST,
+	user: process.env.DB_USERNAME,
+	password: process.env.DB_PWD,
+	database: process.env.DB_NAME,
+	port: process.env.DB_PORT
 })
 connectionToDB.connect((err) => {
 	if (err) throw err;
@@ -127,15 +128,15 @@ var server = http
 								"content-type": "text/plain"
 							});
 							res.write(JSON.stringify('some error happen'));
-							console.log(
-								`${new Date().getHours()}:${new Date().getMinutes()}  just sent error message on DB request`
+							console.error(
+								`${new Date().getHours()}:${new Date().getMinutes()}  just sent error message on DB request: ${err}`
 							);
 						} else {
 							res.writeHead(200, {
 								"content-type": "application/json"
 							});
 							res.write(JSON.stringify(result));
-							console.log(
+							console.info(
 								`${new Date().getHours()}:${new Date().getMinutes()}  just sent res of db query`
 							);
 						}
@@ -158,7 +159,7 @@ var server = http
 	})
 	.listen(process.env.PORT);
 
-console.log(
+console.info(
 	`${new Date().getHours()}:${new Date().getMinutes()}  server running ${
     process.env.PORT
   }`
