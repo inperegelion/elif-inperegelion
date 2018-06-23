@@ -1,4 +1,4 @@
-## Link on deployed test tast for Eliftech
+## Link on deployed test task for Eliftech
 https://elif-inperegelion.herokuapp.com/
 
 ## To Lounch it locally:
