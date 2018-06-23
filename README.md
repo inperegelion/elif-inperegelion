@@ -14,3 +14,5 @@ npm install
 cp ".env.example" ".env"
 npm start
 ```
+
+P.S the passwords are open, becouse of tiredness
