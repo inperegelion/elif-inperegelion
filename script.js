@@ -2,18 +2,17 @@ const homeUrl = "/";
 let allCompanies;
 let originalCompanies;
 
-let myData = {
+fetchForDb({
 	mode: "read",
 	arr: {
 		id: undefined,
-		name: 'Romet',
-		own_earnings: 205,
+		name: undefined,
+		own_earnings: undefined,
 		mother: undefined,
 		new_name: undefined,
 		new_earnings: undefined
 	}
-};
-// fetchForDb(myData)
+})
 
 
 function fetchForDb(data) {
@@ -41,6 +40,7 @@ function fetchForDb(data) {
 }
 $(() => {
 	$('h3').on('click', () => {
+		console.log('allo');
 		doCalculations()
 	})
 	let promise = fetchForDb({
@@ -95,7 +95,9 @@ function plugInteraction(mode) {
 
 		case 'newby':
 			$('.delButton-newby').on('click', (event) => {
-				$(event.currentTarget).parent().remove()
+				allCompanies[findCompanyByName($(event.currentTarget).parent().attr(id), allCompanies)] = undefined
+				console.log(allCompanies);
+				$(event.currentTarget).parent().remove();
 			})
 
 			$('.addButton-newby').on('click', (event) => {
@@ -231,6 +233,10 @@ function plugInteraction(mode) {
 
 		default:
 			$('.delButton').on('click', (event) => {
+				console.log(findCompanyByName($(event.currentTarget).parent().attr('id'), allCompanies));
+
+				// allCompanies[findCompanyByName($(event.currentTarget).parent().attr('id'), allCompanies)] = undefined
+				console.log(allCompanies);
 				$(event.currentTarget).parent().remove()
 			})
 
@@ -249,7 +255,6 @@ function isUnique(newName, companiesList) {
 	let temp = true;
 	companiesList.map((row) => {
 		if (newName == row.name) {
-			console.log('NOT UNIQUE!');
 			temp = false
 		}
 	})
@@ -290,22 +295,6 @@ function doCalculations() {
 		row.childs = findCompanyByMother(row.name, arr)
 	})
 	allCompanies.forEach(company => {
-		console.log(company.name, calc(company));
 		company.html.children('.totalEarnings').html(calc(company))
 	});
 }
-
-
-// allCompanies.map((row, index, arr) => {
-// 	row.total = row.own_earnings;
-// // 	row.mother = arr[findCompanyByName(row.mother, allCompanies)]
-// // 	console.log(row.mother);
-// // })
-
-// allCompanies.map((row, index, arr) => {
-// 	if (row.mother == null || row.mother == undefined) return row
-// 	arr[findCompanyByName(row.mother, arr)].childs.push(row.name)
-// })
-
-// function kidSumm(elem) {
-// }
