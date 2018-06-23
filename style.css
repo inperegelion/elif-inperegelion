@@ -1,6 +1,12 @@
-body{
+body {
 	background-color: aliceblue;
+	font-family: 'Ubuntu Mono'
 }
-.own-earnings {
+
+span {
 	cursor: pointer;
+}
+
+input {
+	width: 7em;
 }
