@@ -2,7 +2,7 @@
 https://elif-inperegelion.herokuapp.com/
 
 ## To Lounch it locally:
-Make sure that you have this programs, at first:
+Make sure that you have this programs on your Linux (Ubuntu surely, other I dunno), at first:
 * git
 * npm
 
