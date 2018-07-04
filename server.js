@@ -120,8 +120,6 @@ var server = http
 				});
 				req.on("end", () => {
 					body = JSON.parse(body);
-					// console.log(body);
-					// try {
 					connectionToDB.query(queryGenerator(body.mode, body.arr), (err, result) => {
 						if (err) {
 							res.writeHead(200, {
@@ -142,15 +140,6 @@ var server = http
 						}
 					})
 
-					// } catch (e) {
-					// res.writeHead(200, {
-					// 	"content-type": "text/plain"
-					// });
-					// res.write(JSON.stringify('some error happen'));
-					// console.log(
-					// 	`${new Date().getHours()}:${new Date().getMinutes()}  just sent error message`
-					// );
-					// }
 				});
 			}
 		}).then(() => {

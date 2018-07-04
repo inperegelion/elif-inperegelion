@@ -2,17 +2,17 @@ const homeUrl = "/";
 let allCompanies;
 let originalCompanies;
 
-fetchForDb({
-	mode: "read",
-	arr: {
-		id: undefined,
-		name: undefined,
-		own_earnings: undefined,
-		mother: undefined,
-		new_name: undefined,
-		new_earnings: undefined
-	}
-})
+// fetchForDb({
+// 	mode: "read",
+// 	arr: {
+// 		id: undefined,
+// 		name: undefined,
+// 		own_earnings: undefined,
+// 		mother: undefined,
+// 		new_name: undefined,
+// 		new_earnings: undefined
+// 	}
+// })
 
 
 function fetchForDb(data) {
@@ -35,6 +35,8 @@ function fetchForDb(data) {
 		.then(res => {
 			allCompanies = JSON.parse(res);
 			originalCompanies = allCompanies;
+			// console.log(allCompanies);
+
 		});
 	return response
 }
@@ -61,7 +63,78 @@ $(() => {
 			plugInteraction()
 
 		})
+	//SAVE CHANGES BUTTON
+	$('.btn.save-changes').on('click', (event) => {
+		$(event.target).css({
+			color: 'grey'
+		}).text('Saving Changes... (oftenly it takes much time)')
+		let promises = []
 
+		//edit edited rows in original db
+		allCompanies.map((row) => {
+			originalCompanies.map((orRow) => {
+				if (orRow.id == row.id) {
+					let newName;
+					let newEarnings;
+					if (orRow.name != row.name) {
+						newName = row.name;
+					};
+					if (orRow.own_earnings != row.own_earnings) {
+						newEarnings = row.own_earnings
+					};
+					console.log({
+						mode: 'edit',
+						id: row.id,
+						newName: newName,
+						newEarnings: newEarnings,
+					});
+
+					promises.push(fetchForDb({
+						mode: 'edit',
+						arr: {
+							id: row.id,
+							name: orRow.name,
+							own_earnings: orRow.own_earnings,
+							new_name: newName,
+							new_earnings: newEarnings
+						}
+					}))
+				}
+			})
+		})
+
+		// add new rows to db table
+		allCompanies.map((row) => {
+			if (row.id == undefined) {
+				console.log({
+					mode: 'add',
+					id: row.id,
+					name: row.name,
+					own_earnings: row.own_earnings,
+					newName: newName,
+					newEarnings: newEarnings,
+				});
+				promises.push(fetchForDb({
+					mode: 'add',
+					arr: {
+						id: undefined,
+						name: row.name,
+						own_earnings: row.own_earnings,
+						mother: row.mother,
+						new_name: undefined,
+						new_earnings: undefined
+					}
+				}))
+
+			}
+		})
+		Promise.all(promises).then(() => {
+			$(event.target).css({
+				color: 'black'
+			}).text('The changes saved, reload to see updated info')
+			console.log(allCompanies);
+		})
+	})
 })
 
 function plugInteraction(mode) {
@@ -139,7 +212,7 @@ function plugInteraction(mode) {
 				})
 			})
 
-			/////////////////////////////////////////////////
+
 			$('.changeableName').on('click', (event) => {
 				let temp = $(event.currentTarget).text();
 
@@ -167,7 +240,6 @@ function plugInteraction(mode) {
 				})
 			})
 
-			/////////////////////////////////////////////////
 			plugInteraction('edition-newby')
 
 			break;
@@ -295,6 +367,6 @@ function doCalculations() {
 		row.childs = findCompanyByMother(row.name, arr)
 	})
 	allCompanies.forEach(company => {
-		company.html.children('.totalEarnings').html(calc(company))
+		$(company.html).children('.totalEarnings').html(calc(company))
 	});
 }
