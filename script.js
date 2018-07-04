@@ -42,36 +42,31 @@ $(() => {
 			console.log(originalCompanies);
 
 			allCompanies.map((row) => {
-				row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
 				if (row.mother == null || row.mother == undefined || row.mother == 'undefined') {
+					row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
 					$('#mother-companies').append(row.html)
 				} else {
+					row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
 					row.motherID = `#${row.mother}-childs`
 					$(row.motherID).append(row.html);
 				}
 				row.html = $('#' + row.name)
 				row.toDelete = false;
 			})
-
-			// allCompanies.map((row) => {
-			// 	row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
-			// 	if (row.mother == null || row.mother == undefined || row.mother == 'undefined') {
-			// 		$('#mother-companies').append(row.html)
-			// 	} else {
-			// 		row.motherID = `#${row.mother}-childs`
-			// 		$(row.motherID).append(row.html);
-			// 	}
-			// 	row.html = $('#' + row.name)
-			// })
-			// function arrangeComps(comp,mutter) {
-			// 	comp.childs.map((child)=>{
-			// 		child.html = `<li id = '${ch.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
-			// 		mutter.append(child.html)
-			// 	})
-			// }
 			allCompanies.map((row) => {
-				row.html; //????
 
+				if (row.mother != null && row.mother != undefined && row.mother != 'undefined') {
+
+					if ($('#' + row.name).length) {
+						return
+					}
+					row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
+					row.motherID = `#${row.mother}-childs`
+
+					$(row.motherID).append(row.html);
+				}
+				row.html = $('#' + row.name)
+				row.toDelete = false;
 			})
 
 			plugInteraction()
@@ -174,7 +169,7 @@ $(() => {
 			$(event.target).css({
 				color: 'black'
 			}).text('The changes saved, reload to see updated info')
-			console.log(allCompanies);
+			console.log('end', allCompanies);
 		})
 	})
 })
