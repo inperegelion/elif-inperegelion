@@ -2,18 +2,6 @@ const homeUrl = "/";
 let allCompanies;
 let originalCompanies;
 
-// fetchForDb({
-// 	mode: "read",
-// 	arr: {
-// 		id: undefined,
-// 		name: undefined,
-// 		own_earnings: undefined,
-// 		mother: undefined,
-// 		new_name: undefined,
-// 		new_earnings: undefined
-// 	}
-// })
-
 
 function fetchForDb(data) {
 	data = JSON.stringify(data)
@@ -35,11 +23,13 @@ function fetchForDb(data) {
 		.then(res => {
 			allCompanies = JSON.parse(res);
 			originalCompanies = allCompanies;
-			// console.log(allCompanies);
-
+			console.log(allCompanies);
+			return allCompanies
 		});
 	return response
 }
+
+//THE MAIN BLOCK STARTS HERE, AND IT'S ABOUT 24 CODE LINES
 $(() => {
 	$('h3').on('click', () => {
 		console.log('allo');
@@ -48,7 +38,8 @@ $(() => {
 	let promise = fetchForDb({
 			mode: "read"
 		})
-		.then(() => {
+		.then((allCompanies) => {
+			console.log(originalCompanies);
 
 			allCompanies.map((row) => {
 				row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
@@ -59,7 +50,30 @@ $(() => {
 					$(row.motherID).append(row.html);
 				}
 				row.html = $('#' + row.name)
+				row.toDelete = false;
 			})
+
+			// allCompanies.map((row) => {
+			// 	row.html = `<li id = '${row.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
+			// 	if (row.mother == null || row.mother == undefined || row.mother == 'undefined') {
+			// 		$('#mother-companies').append(row.html)
+			// 	} else {
+			// 		row.motherID = `#${row.mother}-childs`
+			// 		$(row.motherID).append(row.html);
+			// 	}
+			// 	row.html = $('#' + row.name)
+			// })
+			// function arrangeComps(comp,mutter) {
+			// 	comp.childs.map((child)=>{
+			// 		child.html = `<li id = '${ch.name}'><span class="changeableName btn">${row.name}</span> | own: <span class="changeableEarnings btn">${row.own_earnings}</span> | total: <span class="totalEarnings btn"></span><button class="addButton btn">add</button><button class="delButton btn">del</button><ul id = '${row.name}-childs'></ul></li>`;
+			// 		mutter.append(child.html)
+			// 	})
+			// }
+			allCompanies.map((row) => {
+				row.html; //????
+
+			})
+
 			plugInteraction()
 
 		})
@@ -76,29 +90,34 @@ $(() => {
 				if (orRow.id == row.id) {
 					let newName;
 					let newEarnings;
+					let isEdited = false;
 					if (orRow.name != row.name) {
 						newName = row.name;
+						isEdited = true;
 					};
 					if (orRow.own_earnings != row.own_earnings) {
-						newEarnings = row.own_earnings
+						newEarnings = row.own_earnings;
+						isedited = true;
 					};
-					console.log({
-						mode: 'edit',
-						id: row.id,
-						newName: newName,
-						newEarnings: newEarnings,
-					});
-
-					promises.push(fetchForDb({
-						mode: 'edit',
-						arr: {
+					if (isEdited) {
+						console.log({
+							mode: 'edit',
 							id: row.id,
-							name: orRow.name,
-							own_earnings: orRow.own_earnings,
-							new_name: newName,
-							new_earnings: newEarnings
-						}
-					}))
+							newName: newName,
+							newEarnings: newEarnings,
+						});
+
+						promises.push(fetchForDb({
+							mode: 'edit',
+							arr: {
+								id: row.id,
+								name: orRow.name,
+								own_earnings: orRow.own_earnings,
+								new_name: newName,
+								new_earnings: newEarnings
+							}
+						}))
+					}
 				}
 			})
 		})
@@ -111,8 +130,6 @@ $(() => {
 					id: row.id,
 					name: row.name,
 					own_earnings: row.own_earnings,
-					newName: newName,
-					newEarnings: newEarnings,
 				});
 				promises.push(fetchForDb({
 					mode: 'add',
@@ -128,6 +145,31 @@ $(() => {
 
 			}
 		})
+
+		// del removed rows from db table
+		allCompanies.map((row) => {
+			if (row.toDelete) {
+				console.log({
+					mode: 'delete',
+					id: row.id,
+					name: row.name,
+					own_earnings: row.own_earnings,
+				});
+				promises.push(fetchForDb({
+					mode: 'delete',
+					arr: {
+						id: undefined,
+						name: row.name,
+						own_earnings: row.own_earnings,
+						mother: row.mother,
+						new_name: undefined,
+						new_earnings: undefined
+					}
+				}))
+
+			}
+		})
+
 		Promise.all(promises).then(() => {
 			$(event.target).css({
 				color: 'black'
@@ -168,7 +210,7 @@ function plugInteraction(mode) {
 
 		case 'newby':
 			$('.delButton-newby').on('click', (event) => {
-				allCompanies[findCompanyByName($(event.currentTarget).parent().attr(id), allCompanies)] = undefined
+				allCompanies[findCompanyByName($(event.currentTarget).parent().attr('id'), allCompanies)].toDelete = true
 				console.log(allCompanies);
 				$(event.currentTarget).parent().remove();
 			})
@@ -305,11 +347,8 @@ function plugInteraction(mode) {
 
 		default:
 			$('.delButton').on('click', (event) => {
-				console.log(findCompanyByName($(event.currentTarget).parent().attr('id'), allCompanies));
-
-				// allCompanies[findCompanyByName($(event.currentTarget).parent().attr('id'), allCompanies)] = undefined
-				console.log(allCompanies);
-				$(event.currentTarget).parent().remove()
+				allCompanies[findCompanyByName($(event.currentTarget).parent().attr('id'), allCompanies)].toDelete = true
+				$(event.currentTarget).parent().remove();
 			})
 
 			$('.addButton').on('click', (event) => {

@@ -32,6 +32,8 @@ function queryGenerator(mode, arr = new Object()) {
 		arr.mother == "NULL";
 	}
 	switch (mode) {
+		case 'master':
+			return `${arr.query}`
 		case "read":
 			return `SELECT * FROM company`;
 
@@ -46,9 +48,6 @@ function queryGenerator(mode, arr = new Object()) {
 								UPDATE company SET name = '${arr.new_name}' WHERE id = ${ arr.id} \
 								OR name = '${arr.name}'`;
 			} else if (arr.new_name != undefined) {
-				console.log(`UPDATE company SET name = '${arr.ew_name}'\
-				WHERE id = ${arr.id} OR name = '${arr.name}'`);
-
 				return `UPDATE company SET name = '${arr.new_name}'\
 								WHERE id = ${arr.id} OR name = '${arr.name}'`;
 			} else if (arr.new_earnings != undefined) {
