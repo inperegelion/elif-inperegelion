@@ -54,9 +54,7 @@ $(() => {
 				row.toDelete = false;
 			})
 			allCompanies.map((row) => {
-
 				if (row.mother != null && row.mother != undefined && row.mother != 'undefined') {
-
 					if ($('#' + row.name).length) {
 						return
 					}
@@ -76,7 +74,8 @@ $(() => {
 	$('.btn.save-changes').on('click', (event) => {
 		$(event.target).css({
 			color: 'grey'
-		}).text('Saving Changes... (oftenly it takes much time)')
+		}).text('Saving Changes... (oftenly it takes much time)').toggleClass('save-changes')
+
 		let promises = []
 
 		//edit edited rows in original db
@@ -126,6 +125,9 @@ $(() => {
 					name: row.name,
 					own_earnings: row.own_earnings,
 				});
+				if (row.mother == 'mother') {
+					row.mother = undefined
+				}
 				promises.push(fetchForDb({
 					mode: 'add',
 					arr: {
@@ -350,7 +352,9 @@ function plugInteraction(mode) {
 				$(event.currentTarget).siblings('ul').append('<li><input class="addedName" placeholder="new name?"></input><input class="addedEarnings" placeholder="own earnings?"></input><button class="doAdd btn">+</button></li>')
 				plugInteraction(mode = 'doAdd')
 			})
-
+			// $(".addButton-main").on('click', (event) => {
+			// 	$(event.currentTarget).siblings('ul').append('<li><input class="addedName" placeholder="new name?"></input><input class="addedEarnings" placeholder="own earnings?"></input><button class="doAdd btn">+</button></li>')
+			// })
 			plugInteraction('edition')
 			doCalculations()
 			break;

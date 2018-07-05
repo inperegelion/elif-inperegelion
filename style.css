@@ -1,6 +1,5 @@
 body {
 	background-color: aliceblue;
-	font-family: 'Ubuntu Mono'
 }
 
 span {
@@ -9,4 +8,8 @@ span {
 
 input {
 	width: 7em;
+}
+
+.save-changes{
+	background-color: brown
 }
