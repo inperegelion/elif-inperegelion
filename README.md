@@ -1,5 +1,5 @@
-## Link on deployed test task for Eliftech
-https://elif-inperegelion.herokuapp.com/
+## You are on the official page of my test task for Eliftech's Fresh Blood School
+
 
 ## To Lounch it locally:
 Make sure that you have this programs on your Linux (Ubuntu surely, other I dunno), at first:
