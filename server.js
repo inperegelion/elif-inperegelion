@@ -18,9 +18,8 @@ function send404(response, request) {
 	});
 	response.write("Error 404: Resource not found.");
 	console.info(
-		`${new Date().getHours()}:${new Date().getMinutes()}  just sent err404 on ${
-      request.url
-    }`
+		`${new Date().getHours()}:${new Date().getMinutes()}  just sent err404 on \ 
+		${request.url}`
 	);
 }
 
